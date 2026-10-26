@@ -1,0 +1,931 @@
+:root {
+  --bg: #ffffff;
+  --card: #ffffff;
+  --court: #2563eb;
+  --court-dark: #1e3a8a;
+  --court-soft: #eaf1fd;
+  --shuttle: #f5b301;
+  --text: #15241e;
+  --muted: #5d6f66;
+  --accent: var(--court);
+  --ok: #16a34a;
+  --live: #e0820a;
+  --danger: #dc2626;
+  --border: #d6e0f0;
+  color: var(--text);
+  background: var(--bg);
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.icon {
+  flex-shrink: 0;
+  vertical-align: -3px;
+}
+
+main,
+.display {
+  padding: 16px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Bandeau façon terrain : vert court, filets blancs et volant jaune */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 14px 16px;
+  color: #fff;
+  background: linear-gradient(90deg, var(--court-dark), var(--court));
+  border-bottom: 4px solid var(--shuttle);
+}
+
+.topbar h1 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 1.3rem;
+  letter-spacing: 0.02em;
+}
+
+.topbar .hint {
+  color: #d7f0e4;
+}
+
+.topbar .btn {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.6);
+  background: transparent;
+}
+
+.tabs {
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+  padding: 8px 16px 0;
+  background: var(--court-soft);
+  border-bottom: 1px solid var(--border);
+}
+
+.tabs button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 8px 8px 0 0;
+  border-bottom: none;
+  background: transparent;
+  color: var(--court-dark);
+  white-space: nowrap;
+}
+
+.tabs a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 8px 8px 0 0;
+  color: var(--court-dark);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.tabs a.disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.tabs a.active {
+  background: var(--court);
+  color: #fff;
+}
+
+.tabs button.active {
+  background: var(--court);
+  color: #fff;
+  border-color: var(--court);
+}
+
+h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.1rem;
+  margin: 20px 0 8px;
+  color: var(--court-dark);
+}
+
+h3 {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 1rem;
+  margin: 12px 0 6px;
+}
+
+button,
+.btn,
+input,
+select,
+textarea {
+  font: inherit;
+  font-size: 0.9rem;
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--card);
+  color: var(--text);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: 2px solid var(--shuttle);
+  outline-offset: 1px;
+}
+
+button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+button:hover:not(:disabled) {
+  border-color: var(--court);
+}
+
+button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+button.primary {
+  background: var(--shuttle);
+  color: var(--court-dark);
+  border-color: var(--shuttle);
+  font-weight: 600;
+}
+
+button.primary:hover:not(:disabled) {
+  background: #ffc233;
+}
+
+button.danger {
+  color: var(--danger);
+}
+
+.btn {
+  text-decoration: none;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0;
+}
+
+.row label,
+.card label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.row label.check {
+  flex-direction: row;
+  align-items: center;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-bottom: 12px;
+  box-shadow: 0 1px 2px rgba(30, 58, 138, 0.05);
+}
+
+.grid2,
+.grid3 {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 720px) {
+  .grid2 {
+    grid-template-columns: 1fr 1fr;
+  }
+  .grid3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Carte terrain : bordure ligne blanche sur fond vert quand occupé */
+.court-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.court-name {
+  min-width: 0;
+  padding: 2px 12px;
+  border-radius: 999px;
+  background: var(--court);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.85rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.court.busy {
+  border-color: var(--live);
+  animation: pulse-live 1.6s ease-in-out infinite;
+}
+
+@keyframes pulse-live {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(224, 130, 10, 0.6);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(224, 130, 10, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .court.busy {
+    animation: none;
+  }
+}
+
+.court.free {
+  border-color: var(--court);
+}
+
+.court.off {
+  opacity: 0.55;
+}
+
+/* Plan du gymnase (admin) */
+.gym {
+  display: grid;
+  gap: 8px;
+  margin: 8px 0 12px;
+  padding: 10px;
+  border: 3px solid var(--court-dark);
+  border-radius: 10px;
+  background: var(--court-soft);
+}
+
+.gym-cell {
+  min-height: 120px;
+  padding: 6px;
+  border: 2px dashed var(--border);
+  border-radius: 8px;
+  background: var(--card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gym-cell.filled {
+  border: 2px solid var(--court);
+}
+
+.gym-court {
+  width: 100%;
+  cursor: grab;
+}
+
+/* Petit écran : le plan passe en une colonne (le style inline des colonnes doit être écrasé) */
+@media (max-width: 720px) {
+  .gym {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+}
+
+/* Affichage : pas de bordure pointillée autour des cases */
+.display-cell {
+  border: none;
+  background: none;
+}
+
+/* Affichage : texte des cartes de terrain centré */
+.court {
+  text-align: center;
+}
+
+/* Affichage : carte de terrain dans sa case du plan */
+.gym-cell > .card {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+.gym-court .court-plan {
+  margin-bottom: 4px;
+}
+
+.gym-court.off {
+  opacity: 0.55;
+}
+
+.gym-unplaced {
+  min-height: 48px;
+  padding: 8px;
+  border: 2px dashed var(--border);
+  border-radius: 8px;
+}
+
+.gym-unplaced .gym-court {
+  width: 160px;
+}
+
+.court-plan {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-bottom: 8px;
+  border-radius: 6px;
+}
+
+.match-label {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.score {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--court-dark);
+}
+
+.hint {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.warn {
+  color: var(--live);
+}
+
+.error {
+  color: var(--danger);
+  font-size: 0.85rem;
+}
+
+.tag {
+  display: inline-block;
+  padding: 2px 8px;
+  margin: 0 4px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  background: var(--court-soft);
+  color: var(--court-dark);
+}
+
+.tag.free {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.tag.live {
+  background: #fff1d6;
+  color: #8a4b00;
+}
+
+.tag.done {
+  background: #e6f0ff;
+  color: #1e3a8a;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0;
+}
+
+.list li {
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+ol.list {
+  padding-left: 20px;
+}
+
+ol.list li,
+ol.steps li {
+  list-style: decimal;
+}
+
+.steps {
+  padding-left: 20px;
+}
+
+.steps li {
+  margin-bottom: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 8px 0;
+  font-size: 0.9rem;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+th {
+  color: var(--court-dark);
+  background: var(--court-soft);
+}
+
+tr.qualified td {
+  color: var(--ok);
+  font-weight: 600;
+}
+
+textarea {
+  width: 100%;
+  margin: 8px 0;
+}
+
+details {
+  margin: 8px 0;
+}
+
+.match {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+}
+
+.match.playing {
+  border-left-color: var(--shuttle);
+  background: #fffdf5;
+}
+
+.match.done {
+  border-left-color: var(--court);
+}
+
+.match-head {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.match-teams {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: baseline;
+  margin: 6px 0 14px;
+}
+
+.win {
+  color: var(--court);
+}
+
+/* Match : « J1 / J2 VS J3 / J4 » */
+.versus {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  width: 100%;
+  text-align: center;
+}
+
+/* Affichage terrains : équipe 1, VS, équipe 2 empilés */
+.versus.stacked {
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Tableau de bord : séparateur entre les sections, volant au centre */
+.dash-sep {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 24px 0;
+}
+
+.dash-sep::before,
+.dash-sep::after {
+  content: '';
+  flex: 1;
+  height: 2px;
+  background: var(--border);
+}
+
+.dash-sep .icon {
+  color: var(--shuttle);
+}
+
+/* Affichage : espace entre les onglets et le contenu */
+.display .tabs {
+  margin-bottom: 16px;
+}
+
+/* Affichage : tableau façon tennis (défilement horizontal sur petit écran) */
+.bracket-scroll {
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+
+.tennis-bracket {
+  position: relative;
+}
+
+.bracket-lines {
+  position: absolute;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.bracket-lines path {
+  fill: none;
+  stroke: #9dbcf5;
+  stroke-width: 2;
+}
+
+.bracket-title {
+  position: absolute;
+  top: 0;
+  text-align: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--court-dark);
+}
+
+.bracket-match {
+  position: absolute;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 8px 10px;
+  text-align: center;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--border);
+  border-radius: 10px;
+}
+
+.bracket-match.playing {
+  border-left-color: var(--shuttle);
+}
+
+.bracket-match.done {
+  border-left-color: var(--court);
+}
+
+.bracket-match.bye {
+  background: var(--court-soft);
+  justify-content: center;
+  gap: 4px;
+}
+
+.bracket-match.empty {
+  border-style: dashed;
+  border-left-style: dashed;
+  justify-content: center;
+}
+
+.bracket-match .team-name .icon {
+  color: var(--shuttle);
+  margin-right: 4px;
+  vertical-align: -2px;
+}
+
+.bracket-match .score {
+  margin-top: 6px;
+}
+
+/* Admin : explication du mode de tournoi */
+.format-hint {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 8px 0;
+  padding: 10px 12px;
+  border-left: 4px solid var(--shuttle);
+  border-radius: 8px;
+  background: var(--court-soft);
+  color: var(--court-dark);
+  font-size: 0.9rem;
+}
+
+.format-stats {
+  display: block;
+  margin-top: 4px;
+  color: var(--court);
+}
+
+.format-hint .icon {
+  color: var(--court);
+  margin-top: 2px;
+}
+
+/* Affichage : podium de la poule finale */
+.podium {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.podium-step {
+  flex: 1;
+  max-width: 220px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 6px;
+  padding: 12px;
+  text-align: center;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px 12px 0 0;
+}
+
+.podium-step.rank-1 {
+  height: 200px;
+  background: #fff7d6;
+  border-color: var(--shuttle);
+}
+
+.podium-step.rank-2 {
+  height: 160px;
+}
+
+.podium-step.rank-3 {
+  height: 130px;
+}
+
+.medal {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+/* Podium : confettis sur la marche du 1er */
+.podium-step {
+  position: relative;
+  overflow: hidden;
+}
+
+.confetti {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.confetti span {
+  position: absolute;
+  top: -12px;
+  width: 8px;
+  height: 12px;
+  border-radius: 2px;
+  opacity: 0.9;
+  animation: confetti-fall 2.4s linear infinite;
+}
+
+@keyframes confetti-fall {
+  0% {
+    transform: translateY(0) rotate(0deg);
+  }
+  100% {
+    transform: translateY(220px) rotate(540deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .confetti span {
+    animation: none;
+  }
+}
+
+/* Schéma d'un mode de tournoi (sans texte) */
+.format-svg {
+  display: block;
+  width: 100%;
+  max-width: 360px;
+  margin: 8px auto 0;
+}
+
+.fd-box {
+  fill: var(--court-soft);
+  stroke: var(--court);
+  stroke-width: 1.2;
+}
+
+.fd-soft {
+  fill: none;
+  stroke-dasharray: 3 2;
+}
+
+.fd-dot {
+  fill: var(--court);
+}
+
+.fd-l1 { fill: #94a3b8; }
+.fd-l2 { fill: #38bdf8; }
+.fd-l3 { fill: #2563eb; }
+.fd-l4 { fill: #1e3a8a; }
+
+.fd-line {
+  fill: none;
+  stroke: var(--court);
+  stroke-width: 1.2;
+}
+
+.format-table {
+  max-width: 360px;
+  margin: 8px auto;
+  font-size: 0.85rem;
+}
+
+/* Affichage : cartes KPI */
+.kpi {
+  text-align: center;
+}
+
+.kpi-label {
+  margin: 0 0 4px;
+  color: var(--muted);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.kpi-value {
+  margin: 0 0 8px;
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: var(--court);
+  line-height: 1;
+}
+
+.kpi-value span {
+  margin-left: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+/* Affichage : vainqueur d'un tableau */
+.champion {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 8px;
+  font-weight: 700;
+  color: var(--court-dark);
+}
+
+/* Matchs & scores (admin) : noms alignés à gauche */
+.match-teams .versus {
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.team-name {
+  font-weight: 600;
+  color: var(--text);
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.team-name.win {
+  color: var(--court);
+}
+
+.team-name .slash {
+  color: var(--muted);
+  font-weight: 400;
+  margin: 0 4px;
+}
+
+.vs {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--shuttle);
+  color: var(--court-dark);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.set {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.set input {
+  width: 62px;
+}
+
+/* Saisie des scores : chaque set dans un cadre avec son badge */
+.set-box {
+  position: relative;
+  padding: 14px 8px 6px;
+  border: 2px solid #9dbcf5;
+  border-radius: 8px;
+  background: var(--card);
+}
+
+.badge-set {
+  position: absolute;
+  top: -10px;
+  left: 8px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: var(--court);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+@media (max-width: 480px) {
+  .row select,
+  .row input[type='text'],
+  .row input:not([type]) {
+    max-width: 100%;
+  }
+}
+
+/* Sélecteur de langue (toujours visible) */
+.lang-switch {
+  position: fixed;
+  right: 12px;
+  bottom: 12px;
+  z-index: 10;
+  display: flex;
+  overflow: hidden;
+  border: 1px solid var(--court);
+  border-radius: 8px;
+  background: var(--card);
+}
+
+.lang-switch button {
+  border: none;
+  border-radius: 0;
+  padding: 4px 10px;
+  background: transparent;
+  color: var(--court-dark);
+  font-weight: 600;
+}
+
+.lang-switch button.active {
+  background: var(--court);
+  color: #fff;
+}
